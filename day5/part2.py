@@ -1,3 +1,16 @@
+def fix_update(rules, update):
+    fixed = [None] * len(update)
+    for i in range(len(update)):
+        pos = len(update)
+        pages_after = get_pages_after(rules, update[i])
+        # print(update[i], pages_after)
+        for page in pages_after:
+            if page in update:
+                pos -= 1
+        fixed[pos - 1] = update[i]
+    return fixed
+
+
 def get_pages_after(rules, page):
     after = []
     for rule in rules:
@@ -24,12 +37,11 @@ def main():
             rules[i] = rules[i].split('|')
         for i in range(len(updates)):
             updates[i] = updates[i].split(',')
-        
         s = 0
         for update in updates:
             res = check_update(rules, update)
-            if res:
-                # print(update, res)
+            if not res:
+                update = fix_update(rules, update)
                 s += int(update[len(update) // 2])
         print(s)
                 
